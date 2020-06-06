@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const grid = document.querySelector(".grid");
+  const flagsLeft = document.querySelector('#flags-left')
+  const result = document.querySelector('#result')
   let width = 10;
   let bombAmount = 20;
   let flags = 0
@@ -47,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (i < 98 && !isRightEdge && squares[i + 1].classList.contains('bomb')) total++
         if (i < 90 && !isLeftEdge && squares[i - 1 + width].classList.contains('bomb')) total++
         if (i < 88 && !isRightEdge && squares[i + 1 + width].classList.contains('bomb')) total++
-        if (i < 89 && squares[i + width].classList.contains('bomb')) total++
+        if (i < 90 && squares[i + width].classList.contains('bomb')) total++
         squares[i].setAttribute('data', total)
       }
     }
@@ -63,11 +65,13 @@ document.addEventListener("DOMContentLoaded", () => {
         square.classList.add('flag')
         square.innerHTML = '🚩'
         flags++
+        flagsLeft.innerHTML = bombAmount - flags
         checkForWin()
       } else {
         square.classList.remove('flag')
         square.innerHTML = ''
         flags--
+        flagsLeft.innerHTML = bombAmount - flags
       }
     }
   }
@@ -83,6 +87,10 @@ document.addEventListener("DOMContentLoaded", () => {
       let total = square.getAttribute('data')
       if (total != 0) {
         square.classList.add('checked')
+        if (total == 1) square.classList.add('one')
+        if (total == 2) square.classList.add('two')
+        if (total == 3) square.classList.add('three')
+        if (total == 4) square.classList.add('four')
         square.innerHTML = total
         return
       }
@@ -132,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const newSquare = document.getElementById(newId)
         click(newSquare)
       }
-      if (currentId < 89) {
+      if (currentId < 90) {
         const newId = squares[parseInt(currentId) + width].id
         const newSquare = document.getElementById(newId)
         click(newSquare)
@@ -143,6 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Game over
   function gameOver(square) {
     console.log('BOOM! Game Over!')
+    result.innerHTML = 'BOOM! Game Over!'
     isGameOver = true
 
     // Show all bombs
@@ -162,6 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       if (matches === bombAmount) {
         console.log('You win!')
+        result.innerHTML = 'YOU WIN!'
         isGameOver = true
       }
     }
